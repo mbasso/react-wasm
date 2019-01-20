@@ -9,13 +9,6 @@
 
 > Declarative WebAssembly instantiation for React
 
----
-
-Attention - This project isn't completed yet. We'll publish it very soon on npm!
----
-
----
-
 ## Installation
 
 You can install react-wasm using [npm](https://www.npmjs.com/package/react-wasm):
