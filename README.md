@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/mbasso/react-wasm.svg?branch=master)](https://travis-ci.org/mbasso/react-wasm)
 [![npm version](https://img.shields.io/npm/v/react-wasm.svg)](https://www.npmjs.com/package/react-wasm)
 [![npm downloads](https://img.shields.io/npm/dm/react-wasm.svg?maxAge=2592000)](https://www.npmjs.com/package/react-wasm)
+[![Coverage Status](https://coveralls.io/repos/github/mbasso/react-wasm/badge.svg?branch=master)](https://coveralls.io/github/mbasso/react-wasm?branch=master)
 [![MIT](https://img.shields.io/npm/l/react-wasm.svg)](https://github.com/mbasso/react-wasm/blob/master/LICENSE.md)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://paypal.me/BassoMatteo)
 
