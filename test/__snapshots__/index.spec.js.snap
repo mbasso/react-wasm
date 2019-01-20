@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`react-wasm should load module from ArrayBuffer 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`react-wasm should load module from ArrayBuffer with importObject 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+</div>
+`;
+
+exports[`react-wasm should load module from url 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`react-wasm should load module from url with importObject 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+</div>
+`;
+
+exports[`react-wasm should set error if bufferSource is provided with wrong type 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`react-wasm should set error if invalid ArrayBuffer is provided 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`react-wasm should set error if invalid url is provided 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`react-wasm should set error if no url and bufferSource are provided 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`react-wasm should set error if url is provided with wrong type 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`react-wasm should set loading 1`] = `"{\\"loading\\":true,\\"error\\":null,\\"data\\":null}"`;

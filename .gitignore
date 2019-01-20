@@ -1,0 +1,14 @@
+node_modules
+.DS_Store
+*.log
+dist
+lib
+es
+bin
+coverage
+_book
+.nyc_output
+.vscode
+temp
+TODO.md
+package-lock.json
