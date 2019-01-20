@@ -160,9 +160,9 @@ describe('react-wasm', () => {
         data: null
       });
       expect(result.error).toBeInstanceOf(Error);
-      expect(result.error.message).toEqual(
-        'WasmCompile: Wasm decoding failed: expected magic word 00 61 73 6d, found 01 61 73 6d @+0'
-      );
+      expect(result.error.message.match(
+        /Wasm decoding failed: expected magic word 00 61 73 6d, found 01 61 73 6d @\+0/
+      )).toBeTruthy();
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
     }, 2000);
