@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import withWasmDefinition from './withWasm';
 import compileWasm from './compileWasm';
 import type { WasmProps, WasmState } from './types';
 
@@ -50,3 +51,5 @@ export default class Wasm extends React.Component<WasmProps, WasmState> {
     return children(this.state);
   }
 }
+
+export const withWasm = withWasmDefinition;
