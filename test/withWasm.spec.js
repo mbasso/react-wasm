@@ -21,21 +21,34 @@ function Component({ firstname }) {
   return <div>Hello {firstname}</div>;
 }
 
-describe('withWasm ', () => {
+describe('withWasm and url prop', () => {
   let wrapper;
 
   beforeEach(() => {
-    const Enhanced = withWasm(Component);
+    const Enhanced = withWasm()(Component);
 
     const instance = TestRenderer.create(
-      <Enhanced firstname="James" url="/add.wasm" />
+      <Enhanced
+        firstname="James"
+        url="/add.wasm"
+        bufferSource="some-buffer-data"
+        importObject={{ key: 'value' }}
+      />
     );
 
     wrapper = instance.root;
   });
 
   it('should create a new component wrapped by the Wasm one', () => {
-    expect(wrapper.findByType(Wasm)).toBeTruthy();
+    expect(wrapper.findByType(Wasm).props).toEqual(
+      expect.objectContaining({
+        bufferSource: 'some-buffer-data',
+        importObject: {
+          key: 'value'
+        },
+        url: '/add.wasm'
+      })
+    );
   });
 
   it('should create a new component with its own props and the one injected by the Wasm one', () => {
