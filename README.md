@@ -58,7 +58,16 @@ const ExampleComponent = ({ loading, error, data }) => {
   return <div>1 + 2 = {instance.exports.add(1, 2)}</div>;
 };
 
-export default withWasm(ExampleComponent);
+// with a config object
+const withAdd = withWasm({ url: "/add.wasm " });
+const EnhancedExample = withAdd(ExampleComponent);
+
+const App = () => <EnhancedExample />;
+
+// with the "url" prop
+const EnhancedExample = withWasm()(ExampleComponent);
+
+const App = () => <EnhancedExample url="/add.wasm" />;
 ```
 
 ## API
