@@ -9,9 +9,9 @@ const withWasm = (config = {}) => ComponentDefinition => ({
 }) => (
   <Wasm
     url={url}
-    {...config}
     bufferSource={bufferSource}
     importObject={importObject}
+    {...config}
   >
     {wasmData => <ComponentDefinition {...otherProps} {...wasmData} />}
   </Wasm>
