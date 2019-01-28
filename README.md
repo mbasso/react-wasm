@@ -70,6 +70,22 @@ const EnhancedExample = withWasm()(ExampleComponent);
 const App = () => <EnhancedExample url="/add.wasm" />;
 ```
 
+The second argument of the `withWasm` function is a props mapper. If you want to customize the information your child
+component will receive from the underlying `Wasm` component, you can do:
+
+```javascript
+const mapToChild = ({ loading, errors, data }) => ({
+  hasLoaded: !loading,
+  hasError: !!error,
+  hello: data.hello
+});
+
+const withAdd = withWasm({ url: "/add.wasm " }, mapToChild);
+const EnhancedExample = withAdd(ExampleComponent);
+
+const App = () => <EnhancedExample />;
+```
+
 ## API
 
 ```js

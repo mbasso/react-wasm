@@ -1,7 +1,7 @@
 import React from 'react';
 import Wasm from '.';
 
-const withWasm = (config = {}) => ComponentDefinition => ({
+const withWasm = (config = {}, mapToChild) => ComponentDefinition => ({
   url,
   bufferSource,
   importObject,
@@ -13,7 +13,11 @@ const withWasm = (config = {}) => ComponentDefinition => ({
     importObject={importObject}
     {...config}
   >
-    {wasmData => <ComponentDefinition {...otherProps} {...wasmData} />}
+    {wasmData => {
+      const wasmProps = mapToChild ? mapToChild(wasmData) : wasmData;
+
+      return <ComponentDefinition {...otherProps} {...wasmProps} />;
+    }}
   </Wasm>
 );
 

@@ -62,11 +62,20 @@ describe('withWasm', () => {
 
   describe('withWasm and a config object', () => {
     beforeEach(() => {
-      const Enhanced = withWasm({
-        url: '/other.wasm',
-        bufferSource: 'some-other-buffer-data',
-        importObject: { someKey: 'someValue' }
-      })(Component);
+      const mapToChild = ({ loading, error, data }) => ({
+        hello: data.hello,
+        hasLoaded: !loading,
+        hasError: error
+      });
+
+      const Enhanced = withWasm(
+        {
+          url: '/other.wasm',
+          bufferSource: 'some-other-buffer-data',
+          importObject: { someKey: 'someValue' }
+        },
+        mapToChild
+      )(Component);
 
       wrapper = TestRenderer.create(<Enhanced firstname="Thomas" />).root;
     });
@@ -86,9 +95,9 @@ describe('withWasm', () => {
     it('should create a new component with its own props and the one injected by the Wasm one', () => {
       expect(wrapper.findByType(Component).props).toEqual({
         firstname: 'Thomas',
-        loading: true,
-        error: false,
-        data: { hello: 'world' }
+        hello: 'world',
+        hasLoaded: false,
+        hasError: false
       });
     });
   });
