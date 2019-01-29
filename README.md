@@ -77,7 +77,7 @@ component will receive from the underlying `Wasm` component, you can do:
 const mapToChild = ({ loading, errors, data }) => ({
   hasLoaded: !loading,
   hasError: !!error,
-  hello: data.hello
+  add: data.instance.exports.add
 });
 
 const withAdd = withWasm({ url: "/add.wasm " }, mapToChild);
