@@ -1,0 +1,230 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wasm should load module from ArrayBuffer 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should load module from ArrayBuffer with importObject 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+</div>
+`;
+
+exports[`Wasm should load module from url 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should load module from url with importObject 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if bufferSource changes but url is defined 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if bufferSource changes but url is defined 2`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if bufferSource changes but url is defined 3`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if bufferSource doesn't change 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if bufferSource doesn't change 2`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if bufferSource doesn't change 3`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if url doesn't change 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if url doesn't change 2`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should not reinstantiate module if url doesn't change 3`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should reinstantiate module on bufferSource change 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should reinstantiate module on bufferSource change 2`] = `null`;
+
+exports[`Wasm should reinstantiate module on bufferSource change 3`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+</div>
+`;
+
+exports[`Wasm should reinstantiate module on url change 1`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+  20 / 2 = 
+  10
+</div>
+`;
+
+exports[`Wasm should reinstantiate module on url change 2`] = `null`;
+
+exports[`Wasm should reinstantiate module on url change 3`] = `
+<div>
+  loading: 
+  false
+  error: 
+  null
+  1 + 2 = 
+  3
+</div>
+`;
+
+exports[`Wasm should set error if bufferSource is provided with wrong type 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`Wasm should set error if invalid ArrayBuffer is provided 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`Wasm should set error if invalid url is provided 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`Wasm should set error if no url and bufferSource are provided 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`Wasm should set error if url is provided with wrong type 1`] = `"{\\"loading\\":false,\\"error\\":{},\\"data\\":null}"`;
+
+exports[`Wasm should set loading 1`] = `"{\\"loading\\":true,\\"error\\":null,\\"data\\":null}"`;
