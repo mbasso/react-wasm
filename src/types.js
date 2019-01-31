@@ -24,4 +24,10 @@ export type WasmProps = {
   children: (RenderProps: RenderProps) => Node
 };
 
-export type WasmState = RenderProps;
+export type WasmState = {
+  ...$Exact<RenderProps>,
+  prevProps: {
+    url?: ?string,
+    bufferSource?: ?BufferSource,
+  }
+};

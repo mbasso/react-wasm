@@ -22,12 +22,12 @@ const fetchMock = url => new Promise((resolve, reject) => {
   });
 });
 
-const delay = () =>
+const delay = (time = 3000) =>
   new Promise(resolve =>
     setTimeout(() => {
       resolve();
     }),
-    3000
+    time
   );
 
 const importObject = {
@@ -85,7 +85,7 @@ describe('react-wasm', () => {
       );
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should set error if invalid url is provided', done => {
@@ -109,7 +109,7 @@ describe('react-wasm', () => {
       expect(result.error.message).toEqual('404');
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should set error if url is provided with wrong type', done => {
@@ -135,7 +135,7 @@ describe('react-wasm', () => {
       );
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should set error if invalid ArrayBuffer is provided', done => {
@@ -165,7 +165,7 @@ describe('react-wasm', () => {
       )).toBeTruthy();
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should set error if bufferSource is provided with wrong type', done => {
@@ -191,7 +191,7 @@ describe('react-wasm', () => {
       );
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should load module from ArrayBuffer', done => {
@@ -229,7 +229,7 @@ describe('react-wasm', () => {
       expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should load module from url', done => {
@@ -267,7 +267,7 @@ describe('react-wasm', () => {
       expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should load module from ArrayBuffer with importObject', done => {
@@ -304,7 +304,7 @@ describe('react-wasm', () => {
       expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should load module from url with importObject', done => {
@@ -341,7 +341,7 @@ describe('react-wasm', () => {
       expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
       expect(testRenderer.toJSON()).toMatchSnapshot();
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should instantiate a module from a url using instantiateStreaming', done => {
@@ -382,7 +382,7 @@ describe('react-wasm', () => {
       spy.mockRestore();
 
       done();
-    }, 2000);
+    }, 1000);
   });
 
   it('should instantiate a module from a url using instantiate as fallback', done => {
@@ -414,6 +414,456 @@ describe('react-wasm', () => {
       spy.mockRestore();
 
       done();
-    }, 2000);
+    }, 1000);
+  });
+
+  it('should reinstantiate module on url change', done => {
+    let result;
+    let spy;
+    let originalInstantiateStreaming;
+
+    const testRenderer = TestRenderer.create(
+      <Wasm url="/bytes.wasm">
+        {props => {
+          const {
+            loading,
+            error,
+            data
+          } = props;
+          result = props;
+
+          return !loading && !error && (
+            <div>
+              loading: {String(loading)}
+              error: {String(error)}
+
+              1 + 2 = {data.instance.exports.add(1, 2)}
+              20 / 2 = {data.instance.exports.div(20, 2)}
+            </div>
+          );
+        }}
+      </Wasm>
+    );
+
+    delay(2000).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      spy = jest.spyOn(WebAssembly, 'instantiate');
+      originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+      WebAssembly.instantiateStreaming = undefined;
+
+      testRenderer.update(
+        <Wasm url="/bytes-imports.wasm" importObject={importObject}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
+
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
+
+                1 + 2 = {data.instance.exports.add_js(1, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+
+      expect(result).toMatchObject({
+        loading: true,
+        error: null,
+        data: null
+      });
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      return delay(2000);
+    }).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(result.data.instance.exports.add_js).toBeTruthy();
+      expect(result.data.instance.exports.div).toBeFalsy();
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      expect(spy).toHaveBeenCalled();
+      WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+      spy.mockRestore();
+
+      done();
+    });
+  });
+
+  it('should reinstantiate module on bufferSource change', done => {
+    let result;
+    let spy;
+    let originalInstantiateStreaming;
+
+    const testRenderer = TestRenderer.create(
+      <Wasm bufferSource={bytes}>
+        {props => {
+          const {
+            loading,
+            error,
+            data
+          } = props;
+          result = props;
+
+          return !loading && !error && (
+            <div>
+              loading: {String(loading)}
+              error: {String(error)}
+
+              1 + 2 = {data.instance.exports.add(1, 2)}
+              20 / 2 = {data.instance.exports.div(20, 2)}
+            </div>
+          );
+        }}
+      </Wasm>
+    );
+
+    delay(2000).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      spy = jest.spyOn(WebAssembly, 'instantiate');
+      originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+      WebAssembly.instantiateStreaming = undefined;
+
+      testRenderer.update(
+        <Wasm bufferSource={bytesWithImport} importObject={importObject}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
+
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
+
+                1 + 2 = {data.instance.exports.add_js(1, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+
+      expect(result).toMatchObject({
+        loading: true,
+        error: null,
+        data: null
+      });
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      return delay(2000);
+    }).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(result.data.instance.exports.add_js).toBeTruthy();
+      expect(result.data.instance.exports.div).toBeFalsy();
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      expect(spy).toHaveBeenCalled();
+      WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+      spy.mockRestore();
+
+      done();
+    });
+  });
+
+  it('should not reinstantiate module if url doesn\'t change', done => {
+    let result;
+    let spy;
+    let originalInstantiateStreaming;
+
+    const testRenderer = TestRenderer.create(
+      <Wasm url="/bytes.wasm">
+        {props => {
+          const {
+            loading,
+            error,
+            data
+          } = props;
+          result = props;
+
+          return !loading && !error && (
+            <div>
+              loading: {String(loading)}
+              error: {String(error)}
+
+              1 + 2 = {data.instance.exports.add(1, 2)}
+              20 / 2 = {data.instance.exports.div(20, 2)}
+            </div>
+          );
+        }}
+      </Wasm>
+    );
+
+    delay(2000).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      spy = jest.spyOn(WebAssembly, 'instantiate');
+      originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+      WebAssembly.instantiateStreaming = undefined;
+
+      testRenderer.update(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
+
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
+
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      return delay(2000);
+    }).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(result.data.instance.exports.add).toBeTruthy();
+      expect(result.data.instance.exports.div).toBeTruthy();
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      expect(spy).not.toHaveBeenCalled();
+      WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+      spy.mockRestore();
+
+      done();
+    });
+  });
+
+  it('should not reinstantiate module if bufferSource doesn\'t change', done => {
+    let result;
+    let spy;
+    let originalInstantiateStreaming;
+
+    const testRenderer = TestRenderer.create(
+      <Wasm bufferSource={bytes}>
+        {props => {
+          const {
+            loading,
+            error,
+            data
+          } = props;
+          result = props;
+
+          return !loading && !error && (
+            <div>
+              loading: {String(loading)}
+              error: {String(error)}
+
+              1 + 2 = {data.instance.exports.add(1, 2)}
+              20 / 2 = {data.instance.exports.div(20, 2)}
+            </div>
+          );
+        }}
+      </Wasm>
+    );
+
+    delay(2000).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      spy = jest.spyOn(WebAssembly, 'instantiate');
+      originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+      WebAssembly.instantiateStreaming = undefined;
+
+      testRenderer.update(
+        <Wasm bufferSource={bytes}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
+
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
+
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      return delay(2000);
+    }).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(result.data.instance.exports.add).toBeTruthy();
+      expect(result.data.instance.exports.div).toBeTruthy();
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      expect(spy).not.toHaveBeenCalled();
+      WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+      spy.mockRestore();
+
+      done();
+    });
+  });
+
+  it('should not reinstantiate module if bufferSource changes but url is defined', done => {
+    let result;
+    let spy;
+    let originalInstantiateStreaming;
+
+    const testRenderer = TestRenderer.create(
+      <Wasm url="/bytes.wasm">
+        {props => {
+          const {
+            loading,
+            error,
+            data
+          } = props;
+          result = props;
+
+          return !loading && !error && (
+            <div>
+              loading: {String(loading)}
+              error: {String(error)}
+
+              1 + 2 = {data.instance.exports.add(1, 2)}
+              20 / 2 = {data.instance.exports.div(20, 2)}
+            </div>
+          );
+        }}
+      </Wasm>
+    );
+
+    delay(2000).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      spy = jest.spyOn(WebAssembly, 'instantiate');
+      originalInstantiateStreaming = WebAssembly.instantiateStreaming;
+      WebAssembly.instantiateStreaming = undefined;
+
+      testRenderer.update(
+        <Wasm url="/bytes.wasm" bufferSource={bytesWithImport}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
+
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
+
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      return delay(2000);
+    }).then(() => {
+      expect(result).toMatchObject({
+        loading: false,
+        error: null
+      });
+      expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+      expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+      expect(result.data.instance.exports.add).toBeTruthy();
+      expect(result.data.instance.exports.div).toBeTruthy();
+      expect(testRenderer.toJSON()).toMatchSnapshot();
+
+      expect(spy).not.toHaveBeenCalled();
+      WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+      spy.mockRestore();
+
+      done();
+    });
   });
 });
