@@ -107,6 +107,15 @@ type WasmProps = {
     }
   }) => React.Node
 };
+
+withWasm(
+  config?: {
+    url?: string,
+    bufferSource?: BufferSource,
+    importObject?: {}
+  },
+  mapProps?: ({ loading, error, data }) => Props
+): (Component: React.ComponentType) => React.ComponentType
 ```
 
 ## Browser support
