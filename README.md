@@ -74,7 +74,7 @@ The second argument of the `withWasm` function is a props mapper. If you want to
 component will receive from the underlying `Wasm` component, you can do:
 
 ```javascript
-const mapToChild = ({ loading, errors, data }) => ({
+const mapToChild = ({ loading, error, data }) => ({
   hasLoaded: !loading,
   hasError: !!error,
   add: data && data.instance.add
