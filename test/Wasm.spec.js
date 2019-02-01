@@ -445,7 +445,7 @@ describe('Wasm', () => {
 			</Wasm>
 		);
 
-		delay(2000).then(() => {
+		setTimeout(() => {
 			expect(result).toMatchObject({
 				loading: false,
 				error: null
@@ -487,24 +487,24 @@ describe('Wasm', () => {
 			});
 			expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			return delay(2000);
-		}).then(() => {
-			expect(result).toMatchObject({
-				loading: false,
-				error: null
-			});
-			expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
-			expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
-			expect(result.data.instance.exports.add_js).toBeTruthy();
-			expect(result.data.instance.exports.div).toBeFalsy();
-			expect(testRenderer.toJSON()).toMatchSnapshot();
+			setTimeout(() => {
+				expect(result).toMatchObject({
+					loading: false,
+					error: null
+				});
+				expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+				expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+				expect(result.data.instance.exports.add_js).toBeTruthy();
+				expect(result.data.instance.exports.div).toBeFalsy();
+				expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			expect(spy).toHaveBeenCalled();
-			WebAssembly.instantiateStreaming = originalInstantiateStreaming;
-			spy.mockRestore();
+				expect(spy).toHaveBeenCalled();
+				WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+				spy.mockRestore();
 
-			done();
-		});
+				done();
+			}, 2000);
+		}, 2000);
 	});
 
 	it('should reinstantiate module on bufferSource change', done => {
@@ -535,7 +535,7 @@ describe('Wasm', () => {
 			</Wasm>
 		);
 
-		delay(2000).then(() => {
+		setTimeout(() => {
 			expect(result).toMatchObject({
 				loading: false,
 				error: null
@@ -577,24 +577,24 @@ describe('Wasm', () => {
 			});
 			expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			return delay(2000);
-		}).then(() => {
-			expect(result).toMatchObject({
-				loading: false,
-				error: null
-			});
-			expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
-			expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
-			expect(result.data.instance.exports.add_js).toBeTruthy();
-			expect(result.data.instance.exports.div).toBeFalsy();
-			expect(testRenderer.toJSON()).toMatchSnapshot();
+			setTimeout(() => {
+				expect(result).toMatchObject({
+					loading: false,
+					error: null
+				});
+				expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+				expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+				expect(result.data.instance.exports.add_js).toBeTruthy();
+				expect(result.data.instance.exports.div).toBeFalsy();
+				expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			expect(spy).toHaveBeenCalled();
-			WebAssembly.instantiateStreaming = originalInstantiateStreaming;
-			spy.mockRestore();
+				expect(spy).toHaveBeenCalled();
+				WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+				spy.mockRestore();
 
-			done();
-		});
+				done();
+			}, 2000);
+		}, 2000);
 	});
 
 	it('should not reinstantiate module if url doesn\'t change', done => {
@@ -625,7 +625,7 @@ describe('Wasm', () => {
 			</Wasm>
 		);
 
-		delay(2000).then(() => {
+		setTimeout(() => {
 			expect(result).toMatchObject({
 				loading: false,
 				error: null
@@ -667,24 +667,24 @@ describe('Wasm', () => {
 			});
 			expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			return delay(2000);
-		}).then(() => {
-			expect(result).toMatchObject({
-				loading: false,
-				error: null
-			});
-			expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
-			expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
-			expect(result.data.instance.exports.add).toBeTruthy();
-			expect(result.data.instance.exports.div).toBeTruthy();
-			expect(testRenderer.toJSON()).toMatchSnapshot();
+			setTimeout(() => {
+				expect(result).toMatchObject({
+					loading: false,
+					error: null
+				});
+				expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+				expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+				expect(result.data.instance.exports.add).toBeTruthy();
+				expect(result.data.instance.exports.div).toBeTruthy();
+				expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			expect(spy).not.toHaveBeenCalled();
-			WebAssembly.instantiateStreaming = originalInstantiateStreaming;
-			spy.mockRestore();
+				expect(spy).not.toHaveBeenCalled();
+				WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+				spy.mockRestore();
 
-			done();
-		});
+				done();
+			}, 2000);
+		}, 2000);
 	});
 
 	it('should not reinstantiate module if bufferSource doesn\'t change', done => {
@@ -715,7 +715,7 @@ describe('Wasm', () => {
 			</Wasm>
 		);
 
-		delay(2000).then(() => {
+		setTimeout(() => {
 			expect(result).toMatchObject({
 				loading: false,
 				error: null
@@ -757,24 +757,24 @@ describe('Wasm', () => {
 			});
 			expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			return delay(2000);
-		}).then(() => {
-			expect(result).toMatchObject({
-				loading: false,
-				error: null
-			});
-			expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
-			expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
-			expect(result.data.instance.exports.add).toBeTruthy();
-			expect(result.data.instance.exports.div).toBeTruthy();
-			expect(testRenderer.toJSON()).toMatchSnapshot();
+			setTimeout(() => {
+				expect(result).toMatchObject({
+					loading: false,
+					error: null
+				});
+				expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+				expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+				expect(result.data.instance.exports.add).toBeTruthy();
+				expect(result.data.instance.exports.div).toBeTruthy();
+				expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			expect(spy).not.toHaveBeenCalled();
-			WebAssembly.instantiateStreaming = originalInstantiateStreaming;
-			spy.mockRestore();
+				expect(spy).not.toHaveBeenCalled();
+				WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+				spy.mockRestore();
 
-			done();
-		});
+				done();
+			}, 2000);
+		}, 2000);
 	});
 
 	it('should not reinstantiate module if bufferSource changes but url is defined', done => {
@@ -805,7 +805,7 @@ describe('Wasm', () => {
 			</Wasm>
 		);
 
-		delay(2000).then(() => {
+		setTimeout(() => {
 			expect(result).toMatchObject({
 				loading: false,
 				error: null
@@ -847,23 +847,23 @@ describe('Wasm', () => {
 			});
 			expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			return delay(2000);
-		}).then(() => {
-			expect(result).toMatchObject({
-				loading: false,
-				error: null
-			});
-			expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
-			expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
-			expect(result.data.instance.exports.add).toBeTruthy();
-			expect(result.data.instance.exports.div).toBeTruthy();
-			expect(testRenderer.toJSON()).toMatchSnapshot();
+			setTimeout(() => {
+				expect(result).toMatchObject({
+					loading: false,
+					error: null
+				});
+				expect(result.data.module).toBeInstanceOf(WebAssembly.Module);
+				expect(result.data.instance).toBeInstanceOf(WebAssembly.Instance);
+				expect(result.data.instance.exports.add).toBeTruthy();
+				expect(result.data.instance.exports.div).toBeTruthy();
+				expect(testRenderer.toJSON()).toMatchSnapshot();
 
-			expect(spy).not.toHaveBeenCalled();
-			WebAssembly.instantiateStreaming = originalInstantiateStreaming;
-			spy.mockRestore();
+				expect(spy).not.toHaveBeenCalled();
+				WebAssembly.instantiateStreaming = originalInstantiateStreaming;
+				spy.mockRestore();
 
-			done();
-		});
+				done();
+			}, 2000);
+		}, 2000);
 	});
 });
