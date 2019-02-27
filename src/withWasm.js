@@ -1,24 +1,25 @@
 import React from 'react';
-import Wasm from '.';
+import useWasm from './useWasm';
 
-const withWasm = (config = {}, mapToChild) => ComponentDefinition => ({
+const withWasm = (config = {}, mapToChild = x => x) => ComponentDefinition => ({
   url,
   bufferSource,
   importObject,
   ...otherProps
-}) => (
-  <Wasm
-    url={url}
-    bufferSource={bufferSource}
-    importObject={importObject}
-    {...config}
-  >
-    {wasmData => {
-      const wasmProps = mapToChild ? mapToChild(wasmData) : wasmData;
+}) => {
+  const state = useWasm({
+    url,
+    bufferSource,
+    importObject,
+    ...config
+  });
 
-      return <ComponentDefinition {...otherProps} {...wasmProps} />;
-    }}
-  </Wasm>
-);
+  return (
+    <ComponentDefinition
+      {...otherProps}
+      {...mapToChild(state)}
+    />
+  );
+};
 
 export default withWasm;

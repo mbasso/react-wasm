@@ -1,5 +1,5 @@
 import React from 'react';
-import TestRenderer from 'react-test-renderer';
+import TestRenderer, { act } from 'react-test-renderer';
 import Wasm from '../src/Wasm';
 import bytes from './bytes';
 import bytesWithImport from './bytes-imports';
@@ -44,15 +44,19 @@ describe('Wasm', () => {
 	it('should set loading', () => {
 		global.fetch = (...params) => delay().then(() => fetchMock(...params));
 
-		let result;
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					result = props;
-					return JSON.stringify(props);
-				}}
-			</Wasm>
-		);
+    let result;
+    let testRenderer;
+
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            result = props;
+            return JSON.stringify(props);
+          }}
+        </Wasm>
+      );
+    });
 
 		expect(result).toMatchObject({
 			loading: true,
@@ -63,16 +67,19 @@ describe('Wasm', () => {
 	});
 
 	it('should set error if no url and bufferSource are provided', done => {
-		let result;
+    let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm>
-				{props => {
-					result = props;
-					return JSON.stringify(props);
-				}}
-			</Wasm>
-		);
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm>
+          {props => {
+            result = props;
+            return JSON.stringify(props);
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -89,16 +96,19 @@ describe('Wasm', () => {
 	});
 
 	it('should set error if invalid url is provided', done => {
-		let result;
+    let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/error_404.wasm">
-				{props => {
-					result = props;
-					return JSON.stringify(props);
-				}}
-			</Wasm>
-		);
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/error_404.wasm">
+          {props => {
+            result = props;
+            return JSON.stringify(props);
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -113,16 +123,19 @@ describe('Wasm', () => {
 	});
 
 	it('should set error if url is provided with wrong type', done => {
-		let result;
+    let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url={5}>
-				{props => {
-					result = props;
-					return JSON.stringify(props);
-				}}
-			</Wasm>
-		);
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url={5}>
+          {props => {
+            result = props;
+            return JSON.stringify(props);
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -143,16 +156,19 @@ describe('Wasm', () => {
 		invalidBytes[0] = bytes[0] + 1;
 		expect(invalidBytes[0]).not.toEqual(bytes[0]);
 
-		let result;
+    let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm bufferSource={invalidBytes}>
-				{props => {
-					result = props;
-					return JSON.stringify(props);
-				}}
-			</Wasm>
-		);
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm bufferSource={invalidBytes}>
+          {props => {
+            result = props;
+            return JSON.stringify(props);
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -169,16 +185,19 @@ describe('Wasm', () => {
 	});
 
 	it('should set error if bufferSource is provided with wrong type', done => {
-		let result;
+    let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm bufferSource={42}>
-				{props => {
-					result = props;
-					return JSON.stringify(props);
-				}}
-			</Wasm>
-		);
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm bufferSource={42}>
+          {props => {
+            result = props;
+            return JSON.stringify(props);
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -196,29 +215,32 @@ describe('Wasm', () => {
 
 	it('should load module from ArrayBuffer', done => {
 		let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm bufferSource={bytes}>
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm bufferSource={bytes}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -234,29 +256,32 @@ describe('Wasm', () => {
 
 	it('should load module from url', done => {
 		let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -272,28 +297,31 @@ describe('Wasm', () => {
 
 	it('should load module from ArrayBuffer with importObject', done => {
 		let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm bufferSource={bytesWithImport} importObject={importObject}>
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm bufferSource={bytesWithImport} importObject={importObject}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add_js(1, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add_js(1, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -309,28 +337,31 @@ describe('Wasm', () => {
 
 	it('should load module from url with importObject', done => {
 		let result;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/bytes-imports.wasm" importObject={importObject}>
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/bytes-imports.wasm" importObject={importObject}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add_js(1, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add_js(1, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -360,14 +391,16 @@ describe('Wasm', () => {
 
 		let result;
 
-		TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					result = props;
-					return null;
-				}}
-			</Wasm>
-		);
+    act(() => {
+      TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            result = props;
+            return null;
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -392,14 +425,16 @@ describe('Wasm', () => {
 
 		let result;
 
-		TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					result = props;
-					return null;
-				}}
-			</Wasm>
-		);
+    act(() => {
+      TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            result = props;
+            return null;
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -421,29 +456,32 @@ describe('Wasm', () => {
 		let result;
 		let spy;
 		let originalInstantiateStreaming;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -458,27 +496,29 @@ describe('Wasm', () => {
 			originalInstantiateStreaming = WebAssembly.instantiateStreaming;
 			WebAssembly.instantiateStreaming = undefined;
 
-			testRenderer.update(
-				<Wasm url="/bytes-imports.wasm" importObject={importObject}>
-					{props => {
-						const {
-							loading,
-							error,
-							data
-						} = props;
-						result = props;
+      act(() => {
+        testRenderer.update(
+          <Wasm url="/bytes-imports.wasm" importObject={importObject}>
+            {props => {
+              const {
+                loading,
+                error,
+                data
+              } = props;
+              result = props;
 
-						return !loading && !error && (
-							<div>
-								loading: {String(loading)}
-								error: {String(error)}
+              return !loading && !error && (
+                <div>
+                  loading: {String(loading)}
+                  error: {String(error)}
 
-								1 + 2 = {data.instance.exports.add_js(1, 2)}
-							</div>
-						);
-					}}
-				</Wasm>
-			);
+                  1 + 2 = {data.instance.exports.add_js(1, 2)}
+                </div>
+              );
+            }}
+          </Wasm>
+        );
+      });
 
 			expect(result).toMatchObject({
 				loading: true,
@@ -510,30 +550,33 @@ describe('Wasm', () => {
 	it('should reinstantiate module on bufferSource change', done => {
 		let result;
 		let spy;
-		let originalInstantiateStreaming;
+    let originalInstantiateStreaming;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm bufferSource={bytes}>
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm bufferSource={bytes}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -548,27 +591,29 @@ describe('Wasm', () => {
 			originalInstantiateStreaming = WebAssembly.instantiateStreaming;
 			WebAssembly.instantiateStreaming = undefined;
 
-			testRenderer.update(
-				<Wasm bufferSource={bytesWithImport} importObject={importObject}>
-					{props => {
-						const {
-							loading,
-							error,
-							data
-						} = props;
-						result = props;
+      act(() => {
+        testRenderer.update(
+          <Wasm bufferSource={bytesWithImport} importObject={importObject}>
+            {props => {
+              const {
+                loading,
+                error,
+                data
+              } = props;
+              result = props;
 
-						return !loading && !error && (
-							<div>
-								loading: {String(loading)}
-								error: {String(error)}
+              return !loading && !error && (
+                <div>
+                  loading: {String(loading)}
+                  error: {String(error)}
 
-								1 + 2 = {data.instance.exports.add_js(1, 2)}
-							</div>
-						);
-					}}
-				</Wasm>
-			);
+                  1 + 2 = {data.instance.exports.add_js(1, 2)}
+                </div>
+              );
+            }}
+          </Wasm>
+        );
+      });
 
 			expect(result).toMatchObject({
 				loading: true,
@@ -600,30 +645,33 @@ describe('Wasm', () => {
 	it('should not reinstantiate module if url doesn\'t change', done => {
 		let result;
 		let spy;
-		let originalInstantiateStreaming;
+    let originalInstantiateStreaming;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -638,28 +686,30 @@ describe('Wasm', () => {
 			originalInstantiateStreaming = WebAssembly.instantiateStreaming;
 			WebAssembly.instantiateStreaming = undefined;
 
-			testRenderer.update(
-				<Wasm url="/bytes.wasm">
-					{props => {
-						const {
-							loading,
-							error,
-							data
-						} = props;
-						result = props;
+      act(() => {
+        testRenderer.update(
+          <Wasm url="/bytes.wasm">
+            {props => {
+              const {
+                loading,
+                error,
+                data
+              } = props;
+              result = props;
 
-						return !loading && !error && (
-							<div>
-								loading: {String(loading)}
-								error: {String(error)}
+              return !loading && !error && (
+                <div>
+                  loading: {String(loading)}
+                  error: {String(error)}
 
-								1 + 2 = {data.instance.exports.add(1, 2)}
-								20 / 2 = {data.instance.exports.div(20, 2)}
-							</div>
-						);
-					}}
-				</Wasm>
-			);
+                  1 + 2 = {data.instance.exports.add(1, 2)}
+                  20 / 2 = {data.instance.exports.div(20, 2)}
+                </div>
+              );
+            }}
+          </Wasm>
+        );
+      });
 
 			expect(result).toMatchObject({
 				loading: false,
@@ -690,30 +740,33 @@ describe('Wasm', () => {
 	it('should not reinstantiate module if bufferSource doesn\'t change', done => {
 		let result;
 		let spy;
-		let originalInstantiateStreaming;
+    let originalInstantiateStreaming;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm bufferSource={bytes}>
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm bufferSource={bytes}>
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -728,28 +781,30 @@ describe('Wasm', () => {
 			originalInstantiateStreaming = WebAssembly.instantiateStreaming;
 			WebAssembly.instantiateStreaming = undefined;
 
-			testRenderer.update(
-				<Wasm bufferSource={bytes}>
-					{props => {
-						const {
-							loading,
-							error,
-							data
-						} = props;
-						result = props;
+      act(() => {
+        testRenderer.update(
+          <Wasm bufferSource={bytes}>
+            {props => {
+              const {
+                loading,
+                error,
+                data
+              } = props;
+              result = props;
 
-						return !loading && !error && (
-							<div>
-								loading: {String(loading)}
-								error: {String(error)}
+              return !loading && !error && (
+                <div>
+                  loading: {String(loading)}
+                  error: {String(error)}
 
-								1 + 2 = {data.instance.exports.add(1, 2)}
-								20 / 2 = {data.instance.exports.div(20, 2)}
-							</div>
-						);
-					}}
-				</Wasm>
-			);
+                  1 + 2 = {data.instance.exports.add(1, 2)}
+                  20 / 2 = {data.instance.exports.div(20, 2)}
+                </div>
+              );
+            }}
+          </Wasm>
+        );
+      });
 
 			expect(result).toMatchObject({
 				loading: false,
@@ -781,29 +836,32 @@ describe('Wasm', () => {
 		let result;
 		let spy;
 		let originalInstantiateStreaming;
+    let testRenderer;
 
-		const testRenderer = TestRenderer.create(
-			<Wasm url="/bytes.wasm">
-				{props => {
-					const {
-						loading,
-						error,
-						data
-					} = props;
-					result = props;
+    act(() => {
+      testRenderer = TestRenderer.create(
+        <Wasm url="/bytes.wasm">
+          {props => {
+            const {
+              loading,
+              error,
+              data
+            } = props;
+            result = props;
 
-					return !loading && !error && (
-						<div>
-							loading: {String(loading)}
-							error: {String(error)}
+            return !loading && !error && (
+              <div>
+                loading: {String(loading)}
+                error: {String(error)}
 
-							1 + 2 = {data.instance.exports.add(1, 2)}
-							20 / 2 = {data.instance.exports.div(20, 2)}
-						</div>
-					);
-				}}
-			</Wasm>
-		);
+                1 + 2 = {data.instance.exports.add(1, 2)}
+                20 / 2 = {data.instance.exports.div(20, 2)}
+              </div>
+            );
+          }}
+        </Wasm>
+      );
+    });
 
 		setTimeout(() => {
 			expect(result).toMatchObject({
@@ -818,28 +876,30 @@ describe('Wasm', () => {
 			originalInstantiateStreaming = WebAssembly.instantiateStreaming;
 			WebAssembly.instantiateStreaming = undefined;
 
-			testRenderer.update(
-				<Wasm url="/bytes.wasm" bufferSource={bytesWithImport}>
-					{props => {
-						const {
-							loading,
-							error,
-							data
-						} = props;
-						result = props;
+      act(() => {
+        testRenderer.update(
+          <Wasm url="/bytes.wasm" bufferSource={bytesWithImport}>
+            {props => {
+              const {
+                loading,
+                error,
+                data
+              } = props;
+              result = props;
 
-						return !loading && !error && (
-							<div>
-								loading: {String(loading)}
-								error: {String(error)}
+              return !loading && !error && (
+                <div>
+                  loading: {String(loading)}
+                  error: {String(error)}
 
-								1 + 2 = {data.instance.exports.add(1, 2)}
-								20 / 2 = {data.instance.exports.div(20, 2)}
-							</div>
-						);
-					}}
-				</Wasm>
-			);
+                  1 + 2 = {data.instance.exports.add(1, 2)}
+                  20 / 2 = {data.instance.exports.div(20, 2)}
+                </div>
+              );
+            }}
+          </Wasm>
+        );
+      });
 
 			expect(result).toMatchObject({
 				loading: false,
