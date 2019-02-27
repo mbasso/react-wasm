@@ -42,6 +42,31 @@ const ExampleComponent = () => (
 );
 ```
 
+### Hooks
+
+Since `react-wasm` uses the latest version of React, a `useWasm` hook is available:
+
+```js
+import { useWasm } from "react-wasm";
+
+// supposing an "add.wasm" module that exports a single function "add"
+const ExampleComponent = () => {
+  const {
+    loading,
+    error,
+    data
+  } = useWasm({
+    url: '/add.wasm'
+  });
+
+  if (loading) return "Loading...";
+  if (error) return "An error has occurred";
+
+  const { module, instance } = data;
+  return <div>1 + 2 = {instance.exports.add(1, 2)}</div>;
+};
+```
+
 ### Higher Order Component
 
 It's also possible to use the library using the HoC approach by importing the named `withWasm` function:
