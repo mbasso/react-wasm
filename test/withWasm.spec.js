@@ -1,25 +1,19 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
-import Wasm from '../src';
+import useWasm from '../src/useWasm';
 import withWasm from '../src/withWasm';
 
-jest.mock('../src', () => ({
+jest.mock('../src/useWasm', () => ({
   __esModule: true,
-  default: jest.fn(({ children }) => (
-    <div>
-      {children({
-        loading: true,
-        error: false,
-        data: { hello: 'world' }
-      })}
-    </div>
-  ))
+  default: jest.fn(() => ({
+    loading: true,
+    error: false,
+    data: { hello: 'world' }
+  }))
 }));
 
-function Component({ firstname }) {
-  return <div>Hello {firstname}</div>;
-}
+const Component = ({ firstName }) => <div>Hello {firstName}</div>;
 
 describe('withWasm', () => {
   let wrapper;
@@ -30,7 +24,7 @@ describe('withWasm', () => {
 
       wrapper = TestRenderer.create(
         <Enhanced
-          firstname="James"
+          firstName="James"
           url="/add.wasm"
           bufferSource="some-buffer-data"
           importObject={{ key: 'value' }}
@@ -38,8 +32,12 @@ describe('withWasm', () => {
       ).root;
     });
 
-    it('should create a new component wrapped by the Wasm one', () => {
-      expect(wrapper.findByType(Wasm).props).toEqual(
+    afterEach(() => {
+      useWasm.mockClear();
+    });
+
+    it('should create a new component that uses useWasm', () => {
+      expect(useWasm).toHaveBeenCalledWith(
         expect.objectContaining({
           bufferSource: 'some-buffer-data',
           importObject: {
@@ -50,9 +48,9 @@ describe('withWasm', () => {
       );
     });
 
-    it('should create a new component with its own props and the one injected by the Wasm one', () => {
+    it('should create a new component with its own props and the one injected by useWasm', () => {
       expect(wrapper.findByType(Component).props).toEqual({
-        firstname: 'James',
+        firstName: 'James',
         loading: true,
         error: false,
         data: { hello: 'world' }
@@ -77,11 +75,15 @@ describe('withWasm', () => {
         mapToChild
       )(Component);
 
-      wrapper = TestRenderer.create(<Enhanced firstname="Thomas" />).root;
+      wrapper = TestRenderer.create(<Enhanced firstName="Thomas" />).root;
     });
 
-    it('should create a new component wrapped by the Wasm one', () => {
-      expect(wrapper.findByType(Wasm).props).toEqual(
+    afterEach(() => {
+      useWasm.mockClear();
+    });
+
+    it('should create a new component that uses useWasm', () => {
+      expect(useWasm).toHaveBeenCalledWith(
         expect.objectContaining({
           bufferSource: 'some-other-buffer-data',
           importObject: {
@@ -92,9 +94,9 @@ describe('withWasm', () => {
       );
     });
 
-    it('should create a new component with its own props and the one injected by the Wasm one', () => {
+    it('should create a new component with its own props and the one injected by useWasm', () => {
       expect(wrapper.findByType(Component).props).toEqual({
-        firstname: 'Thomas',
+        firstName: 'Thomas',
         hello: 'world',
         hasLoaded: false,
         hasError: false

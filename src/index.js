@@ -1,8 +1,10 @@
 // @flow
 
 import Wasm from './Wasm';
+import useWasmDefinition from './useWasm';
 import withWasmDefinition from './withWasm';
 
-export default Wasm;
-
+export const useWasm = useWasmDefinition;
 export const withWasm = withWasmDefinition;
+
+export default Wasm;

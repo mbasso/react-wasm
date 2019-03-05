@@ -1,6 +1,6 @@
 {
   "name": "react-wasm",
-  "version": "0.2.0",
+  "version": "1.0.1",
   "description": "Declarative WebAssembly instantiation for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
@@ -75,7 +75,7 @@
     "@babel/register": "^7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^9.0.0",
-    "babel-jest": "23.6.0",
+    "babel-jest": "^24.1.0",
     "babel-loader": "^8.0.0",
     "babel-preset-minify": "^0.4.3",
     "compression-webpack-plugin": "1.0.0",
@@ -88,19 +88,20 @@
     "eslint-plugin-import": "2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-react": "7.11.1",
-    "flow-bin": "0.89.0",
-    "jest": "23.6.0",
+    "eslint-plugin-react-hooks": "^1.0.1",
+    "flow-bin": "^0.92.1",
+    "jest": "^24.1.0",
     "nyc": "10.3.0",
     "prettier": "1.15.3",
     "prettier-eslint": "8.8.2",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-test-renderer": "16.7.0",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "react-test-renderer": "^16.8.0",
     "rimraf": "2.6.3",
     "webpack": "3.5.5"
   },
   "peerDependencies": {
-    "react": "^16.7.0"
+    "react": "^16.8.0"
   },
   "npmName": "react-wasm",
   "npmFileMap": [

@@ -42,6 +42,31 @@ const ExampleComponent = () => (
 );
 ```
 
+### Hooks
+
+Since `react-wasm` uses the latest version of React, a `useWasm` hook is available:
+
+```js
+import { useWasm } from "react-wasm";
+
+// supposing an "add.wasm" module that exports a single function "add"
+const ExampleComponent = () => {
+  const {
+    loading,
+    error,
+    data
+  } = useWasm({
+    url: '/add.wasm'
+  });
+
+  if (loading) return "Loading...";
+  if (error) return "An error has occurred";
+
+  const { module, instance } = data;
+  return <div>1 + 2 = {instance.exports.add(1, 2)}</div>;
+};
+```
+
 ### Higher Order Component
 
 It's also possible to use the library using the HoC approach by importing the named `withWasm` function:
@@ -89,7 +114,7 @@ const App = () => <EnhancedExample />;
 ## API
 
 ```js
-type WasmProps = {
+type WasmConfig = {
   // you can instantiate modules using a URL
   // or directly a BufferSource (TypedArray or ArrayBuffer)
   url?: string,
@@ -98,24 +123,28 @@ type WasmProps = {
   // such as functions or WebAssembly.Memory objects.
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiate#Syntax
   importObject?: {},
-  children: (renderProps: {
-    loading: boolean,
-    error: ?Error,
-    data: ?{
-      module: WebAssembly.Module,
-      instance: WebAssembly.Instance
-    }
-  }) => React.Node
+};
+
+type WasmResult = {
+  loading: boolean,
+  error: ?Error,
+  data: ?{
+    module: WebAssembly.Module,
+    instance: WebAssembly.Instance
+  }
+};
+
+type WasmProps = {
+  ...$Exact<WasmConfig>,
+  children: (renderProps: WasmResult) => React.Node
 };
 
 withWasm(
-  config?: {
-    url?: string,
-    bufferSource?: BufferSource,
-    importObject?: {}
-  },
-  mapProps?: ({ loading, error, data }) => Props
+  config?: WasmConfig,
+  mapProps?: ({ loading, error, data }: WasmResult) => Props
 ): (Component: React.ComponentType) => React.ComponentType
+
+useWasm(config?: WasmConfig): WasmResult;
 ```
 
 ## Browser support

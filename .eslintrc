@@ -23,11 +23,13 @@
     "react/jsx-filename-extension": "off",
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
-    "react/react-in-jsx-scope": 2
+    "react/react-in-jsx-scope": 2,
+    "react-hooks/rules-of-hooks": "error"
   },
   "plugins": [
     "flowtype",
-    "react"
+    "react",
+    "react-hooks"
   ],
   "extends": [
     "plugin:flowtype/recommended",
