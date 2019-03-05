@@ -114,7 +114,7 @@ const App = () => <EnhancedExample />;
 ## API
 
 ```js
-type WasmProps = {
+type WasmConfig = {
   // you can instantiate modules using a URL
   // or directly a BufferSource (TypedArray or ArrayBuffer)
   url?: string,
@@ -123,24 +123,28 @@ type WasmProps = {
   // such as functions or WebAssembly.Memory objects.
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiate#Syntax
   importObject?: {},
-  children: (renderProps: {
-    loading: boolean,
-    error: ?Error,
-    data: ?{
-      module: WebAssembly.Module,
-      instance: WebAssembly.Instance
-    }
-  }) => React.Node
+};
+
+type WasmResult = {
+  loading: boolean,
+  error: ?Error,
+  data: ?{
+    module: WebAssembly.Module,
+    instance: WebAssembly.Instance
+  }
+};
+
+type WasmProps = {
+  ...$Exact<WasmConfig>,
+  children: (renderProps: WasmResult) => React.Node
 };
 
 withWasm(
-  config?: {
-    url?: string,
-    bufferSource?: BufferSource,
-    importObject?: {}
-  },
-  mapProps?: ({ loading, error, data }) => Props
+  config?: WasmConfig,
+  mapProps?: ({ loading, error, data }: WasmResult) => Props
 ): (Component: React.ComponentType) => React.ComponentType
+
+useWasm(config?: WasmConfig): WasmResult;
 ```
 
 ## Browser support
