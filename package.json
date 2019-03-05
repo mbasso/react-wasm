@@ -1,6 +1,6 @@
 {
   "name": "react-wasm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Declarative WebAssembly instantiation for React",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
