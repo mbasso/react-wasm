@@ -101,7 +101,7 @@
     "webpack": "3.5.5"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": ">=16.8.0"
   },
   "npmName": "react-wasm",
   "npmFileMap": [
